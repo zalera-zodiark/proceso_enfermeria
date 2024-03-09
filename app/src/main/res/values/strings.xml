@@ -1,5 +1,12 @@
 <resources>
-    <string name="app_name">Proceso Enfermeria</string>
+    <string name="app_name">Diagnósticos, Intervenciones y Resultados de Enfermería</string>
+
+    <string name="title_diagnostics">Diagnósticos</string>
+    <string name="title_interventions">Intervenciones</string>
+    <string name="title_results">Resultados</string>
+    <string name="title_save_lists">Listas Guardadas</string>
+
+    <string name="button_explore">Explorar</string>
 
     <!-- Nanda Domains -->
     <string name="nanda_domain_1">Promoción de la Salud|Conciencia del bienestar o la normalidad de la función y las estrategias utilizadas para mantener el control y mejorar ese bienestar o la normalidad de la función</string>

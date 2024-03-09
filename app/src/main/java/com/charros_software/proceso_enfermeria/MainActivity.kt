@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.charros_software.proceso_enfermeria.data.nandaList
+import com.charros_software.proceso_enfermeria.navigation.AppNavigation
 import com.charros_software.proceso_enfermeria.ui.theme.ProcesoEnfermeriaTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,7 +25,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    AppNavigation()
                 }
             }
         }

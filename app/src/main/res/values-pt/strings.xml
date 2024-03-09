@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Processo de Enfermagem</string>
+    <string name="title_diagnostics">Diagnóstico</string>
     <string name="nanda_domain_1">Promoção da Saúde|Consciência sobre o bem-estar ou função normal e as estratégias utilizadas para manter o controle e melhorar esse bem-estar ou função normal</string>
     <string name="nanda_domain_2">Nutrição|Atividades de incorporação, assimilação e utilização de nutrientes com a finalidade de manter e reparar tecidos e produzir energia</string>
     <string name="nanda_domain_3">Eliminação e Troca|Secreção e excreção de resíduos do corpo</string>
@@ -1112,4 +1113,8 @@
     <string name="noc_0004">0004|Sonhar</string>
     <string name="noc_1835">1835|Conhecimento: tratamento da insuficiência cardíaca</string>
     <string name="noc_2610">2610|Controle de risco familiar: obesidade</string>
+    <string name="title_interventions">Intervenções</string>
+    <string name="button_explore">Explorar</string>
+    <string name="title_results">Resultados</string>
+    <string name="title_save_lists">Listas salvas</string>
 </resources>
