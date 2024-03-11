@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Processo de Enfermagem</string>
     <string name="title_diagnostics">Diagnóstico</string>
+    <string name="cd_search_icon">ícone de pesquisa</string>
     <string name="nanda_domain_1">Promoção da Saúde|Consciência sobre o bem-estar ou função normal e as estratégias utilizadas para manter o controle e melhorar esse bem-estar ou função normal</string>
     <string name="nanda_domain_2">Nutrição|Atividades de incorporação, assimilação e utilização de nutrientes com a finalidade de manter e reparar tecidos e produzir energia</string>
     <string name="nanda_domain_3">Eliminação e Troca|Secreção e excreção de resíduos do corpo</string>
@@ -1117,4 +1118,9 @@
     <string name="button_explore">Explorar</string>
     <string name="title_results">Resultados</string>
     <string name="title_save_lists">Listas salvas</string>
+    <string name="place_holder_search">Buscar...</string>
+    <string name="label_domain">Domínio</string>
+    <string name="label_class">Classe</string>
+    <string name="cd_favourite_icon">ícone favorito</string>
+    <string name="cd_add_collection_icon">adicionar ao ícone da coleção</string>
 </resources>

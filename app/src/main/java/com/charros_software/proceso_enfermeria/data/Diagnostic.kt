@@ -1,14 +1,76 @@
 package com.charros_software.proceso_enfermeria.data
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import com.charros_software.proceso_enfermeria.R
-import com.charros_software.proceso_enfermeria.data.NANDADomain.*
-import com.charros_software.proceso_enfermeria.data.NANDAClass.*
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass1D1
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass1D11
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass1D12
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass1D2
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass1D3
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass1D4
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass1D5
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass1D6
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass1D7
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass1D9
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass2D1
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass2D10
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass2D11
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass2D12
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass2D13
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass2D3
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass2D4
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass2D6
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass2D7
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass2D8
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass2D9
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass3D10
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass3D11
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass3D12
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass3D4
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass3D6
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass3D7
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass3D8
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass3D9
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass4D11
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass4D2
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass4D3
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass4D4
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass4D5
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass5D11
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass5D2
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass5D4
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass5D5
+import com.charros_software.proceso_enfermeria.data.NANDAClass.Klass6D11
+import com.charros_software.proceso_enfermeria.data.NANDADomain.Domain1
+import com.charros_software.proceso_enfermeria.data.NANDADomain.Domain10
+import com.charros_software.proceso_enfermeria.data.NANDADomain.Domain11
+import com.charros_software.proceso_enfermeria.data.NANDADomain.Domain12
+import com.charros_software.proceso_enfermeria.data.NANDADomain.Domain13
+import com.charros_software.proceso_enfermeria.data.NANDADomain.Domain2
+import com.charros_software.proceso_enfermeria.data.NANDADomain.Domain3
+import com.charros_software.proceso_enfermeria.data.NANDADomain.Domain4
+import com.charros_software.proceso_enfermeria.data.NANDADomain.Domain5
+import com.charros_software.proceso_enfermeria.data.NANDADomain.Domain6
+import com.charros_software.proceso_enfermeria.data.NANDADomain.Domain7
+import com.charros_software.proceso_enfermeria.data.NANDADomain.Domain8
+import com.charros_software.proceso_enfermeria.data.NANDADomain.Domain9
+import com.charros_software.proceso_enfermeria.domain.model.DiagnosticModel
 
 data class Diagnostic(
     val domain: NANDADomain,
     val klass: NANDAClass,
     val name: Int
 )
+
+@Composable
+fun Diagnostic.toDomain(): DiagnosticModel {
+    val (number, diagnostic) = stringResource(id = name).split("|")
+    return DiagnosticModel(
+        stringResource(id = domain.description),
+        stringResource(id = klass.description),
+        number.toInt(), diagnostic)
+}
 
 val nandaList = listOf(
     Diagnostic(Domain1, Klass1D1, R.string._00097),

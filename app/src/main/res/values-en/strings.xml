@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Nursing Process</string>
     <string name="title_diagnostics">Diagnostics</string>
+    <string name="cd_search_icon">search icon</string>
     <string name="nanda_domain_1">Health Promotion|Awareness of well-being or normal function and the strategies used to maintain control and improve that well-being or normal function</string>
     <string name="nanda_domain_2">Nutrition|Activities of incorporation, assimilation and utilization of nutrients for the purpose of maintaining and repairing tissues and producing energy</string>
     <string name="nanda_domain_3">Elimination and Exchange|Secretion and excretion of waste products from the body</string>
@@ -1117,4 +1118,9 @@
     <string name="button_explore">Explore</string>
     <string name="title_results">Results</string>
     <string name="title_save_lists">Saved Lists</string>
+    <string name="place_holder_search">Search...</string>
+    <string name="label_domain">Domain</string>
+    <string name="label_class">Class</string>
+    <string name="cd_favourite_icon">favorite icon</string>
+    <string name="cd_add_collection_icon">add to collection icon</string>
 </resources>
