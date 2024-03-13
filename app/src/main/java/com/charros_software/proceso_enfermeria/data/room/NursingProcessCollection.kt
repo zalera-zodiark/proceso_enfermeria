@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "nursing_process_collection")
 data class NursingProcessCollection(
     @PrimaryKey(autoGenerate = true) val idNursingProcessCollection: Int,
-    @ColumnInfo(name = "name") val name: String
+    @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "date") val date: String
 )

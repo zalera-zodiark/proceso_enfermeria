@@ -3,22 +3,47 @@ package com.charros_software.proceso_enfermeria.ui.screens
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.LibraryAdd
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.AddToPhotos
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedIconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.charros_software.proceso_enfermeria.R
@@ -40,9 +65,8 @@ fun DiagnosticsScreen(
         database.nursingProcessDiagnosticsDao(),
         database.nursingProcessCollectionDao(),
         database.favoriteDiagnosticDao())
-    val diagnosticViewModel = DiagnosticViewModel(repository)
+    val diagnosticViewModel = DiagnosticViewModel(repository, nandaList.map { it.toDomain() })
     val diagnosticUiState by diagnosticViewModel.uiState.collectAsState()
-    diagnosticViewModel.initDiagnosticsList(nandaList.map { it.toDomain() })
 
     Scaffold(
         topBar = { TopAppBarDiagnosticScreen(diagnosticViewModel) }
@@ -51,6 +75,7 @@ fun DiagnosticsScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentDiagnosticScreen(
     navController: NavController,
@@ -58,6 +83,10 @@ fun ContentDiagnosticScreen(
     diagnosticUiState: DiagnosticUiState) {
 
     var query by remember { mutableStateOf("") }
+    val sheetState = rememberModalBottomSheetState()
+    var showBottomSheet by remember { mutableStateOf(false) }
+    var newCollection by rememberSaveable { mutableStateOf("") }
+    var diagnosticSelectedToAddCollection by remember { mutableIntStateOf(0) }
 
     Column(
         modifier = Modifier
@@ -88,7 +117,6 @@ fun ContentDiagnosticScreen(
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if (diagnosticUiState.favoriteListLoaded) {
                 items(diagnosticUiState.currentDiagnosticsList.size) {
                     val diagnosticFavorite = diagnosticUiState.favoriteDiagnosticsList.find { favoriteDiagnostic ->
                         favoriteDiagnostic.diagnosticId == diagnosticUiState.currentDiagnosticsList[it].number
@@ -132,7 +160,10 @@ fun ContentDiagnosticScreen(
                                             contentDescription = stringResource(id = R.string.cd_favourite_icon)
                                         )
                                     }
-                                    IconButton(onClick = { /*TODO*/ }) {
+                                    IconButton(onClick = {
+                                        diagnosticSelectedToAddCollection = diagnosticUiState.currentDiagnosticsList[it].number
+                                        showBottomSheet = true
+                                    }) {
                                         Icon(
                                             imageVector = Icons.Outlined.AddToPhotos,
                                             contentDescription = stringResource(id = R.string.cd_add_collection_icon)
@@ -148,6 +179,95 @@ fun ContentDiagnosticScreen(
                             .padding(vertical = 4.dp),
                         thickness = 4.dp
                     )
+            }
+        }
+        if (showBottomSheet) {
+
+            ModalBottomSheet(
+                modifier = Modifier.padding(bottom = 8.dp),
+                onDismissRequest = { showBottomSheet = false },
+                sheetState = sheetState
+            ) {
+                Row(
+                    modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 6.dp, bottom = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    TextField(
+                        modifier = Modifier
+                            .fillMaxWidth(.85f)
+                            .border(
+                                border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
+                                shape = RoundedCornerShape(8.dp)
+                            ),
+                        value = newCollection,
+                        onValueChange = {
+                            if (diagnosticUiState.isCollectionDuplicateError) {
+                                diagnosticViewModel.setOffCollectionDuplicateError()
+                            }
+                            newCollection = it},
+                        label = { Text(stringResource(R.string.label_new_collection)) },
+                        singleLine = true,
+                        isError = diagnosticUiState.isCollectionDuplicateError,
+                        supportingText = {
+                            if (diagnosticUiState.isCollectionDuplicateError) {
+                                Text(stringResource(id = R.string.label_collection_duplicate_error))
+                            } else {
+                                Text("")
+                            }
+                        }
+                    )
+                    FilledIconButton(
+                        modifier = Modifier.padding(start = 5.dp),
+                        onClick = {
+                            diagnosticViewModel.addNewCollection(newCollection)
+                            newCollection = ""
+                        }
+                    ) { Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.button_new_collection)) }
+                }
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp, end = 8.dp, bottom = 70.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Top
+                ) {
+                    item {
+                        HorizontalDivider(
+                            modifier = Modifier
+                                .fillMaxWidth(.99f)
+                                .padding(top = 4.dp, bottom = 2.dp),
+                            thickness = 2.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    items(diagnosticUiState.collectionsList.size) {
+                        ListItem(
+                            headlineContent = { Text(diagnosticUiState.collectionsList[it].name) },
+                            overlineContent = { Text(diagnosticUiState.collectionsList[it].date) },
+                            trailingContent = { OutlinedIconButton(onClick = {
+                                diagnosticViewModel
+                                    .addDiagnosticToCollection(
+                                        diagnosticUiState.collectionsList[it].idNursingProcessCollection,
+                                        diagnosticSelectedToAddCollection) }) {
+                                Icon(Icons.Filled.LibraryAdd, stringResource(id = R.string.cd_add_collection_icon))
+                            } },
+                            supportingContent = {
+                                if (diagnosticUiState.isDiagnosticDuplicateError &&
+                                    diagnosticUiState.idCollectionDiagnosticDuplicateError == diagnosticUiState.collectionsList[it].idNursingProcessCollection) {
+                                    Text(
+                                        stringResource(id = R.string.label_diagnostic_duplicate_error),
+                                        color = Color.Red)
+                                } else {
+                                    Text("",
+                                        color = Color.Black)
+                                }
+                            })
+                        HorizontalDivider(modifier = Modifier
+                            .fillMaxWidth(.9f)
+                            .padding(vertical = 1.dp),
+                            thickness = 1.dp, MaterialTheme.colorScheme.tertiary)
+                    }
                 }
             }
         }
@@ -172,10 +292,4 @@ fun TopAppBarDiagnosticScreen(diagnosticViewModel: DiagnosticViewModel) {
             }
         }
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewDiagnosticScreen() {
-
 }

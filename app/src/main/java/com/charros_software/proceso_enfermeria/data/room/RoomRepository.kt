@@ -1,8 +1,11 @@
 package com.charros_software.proceso_enfermeria.data.room
 
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 class RoomRepository(
     val nursingProcessDiagnosticsDao: NursingProcessDiagnosticsDao,
-    val nursingProcessCollection: NursingProcessCollectionDao,
+    private val nursingProcessCollectionDao: NursingProcessCollectionDao,
     private val favoriteDiagnosticDao: FavoriteDiagnosticDao
 ) {
     suspend fun checkFavoriteDiagnosticExistOrNull(idDiagnostic: Int): Int? {
@@ -18,4 +21,35 @@ class RoomRepository(
     }
 
     suspend fun getFavoriteDiagnosticsList() = favoriteDiagnosticDao.getAllFavoriteDiagnosticsList()
+
+    suspend fun getNursingProcessCollectionList() = nursingProcessCollectionDao.getCollectionsList()
+
+    suspend fun checkCollectionExist(collection: String) =
+        nursingProcessCollectionDao.checkCollectionExist(collection)
+
+    suspend fun addNewCollection(collection: String) {
+        nursingProcessCollectionDao.addProcessCollection(
+            collection, LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern("dd-MMM-yyyy")
+            )
+        )
+    }
+
+    suspend fun checkDiagnosticAlreadyInCollection(
+        idCollection: Int,
+        diagnosticNumber: Int
+    ): Boolean {
+        val collectionsWithDiagnostics = nursingProcessCollectionDao.getCollectionWithDiagnostics()
+
+        val collectionWithDiagnostics =
+            collectionsWithDiagnostics.find { it.collection.idNursingProcessCollection == idCollection }
+
+        val diagnostic =
+            collectionWithDiagnostics!!.diagnostics.find { it.idDiagnostic == diagnosticNumber }
+        return diagnostic != null
+    }
+
+    suspend fun addDiagnosticToCollection(idCollection: Int, idDiagnostic: Int) {
+        nursingProcessDiagnosticsDao.addDiagnosticToCollection(idDiagnostic, idCollection)
+    }
 }

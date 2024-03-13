@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "nursing_process_diagnostics")
 data class NursingProcessDiagnostics(
-    @PrimaryKey val idDiagnostic: Int,
+    @PrimaryKey(autoGenerate = true) val idNursingProcessDiagnostics: Int,
+    val idDiagnostic: Int,
     @ColumnInfo(name = "collection_ref") val collectionRef: Int
 )

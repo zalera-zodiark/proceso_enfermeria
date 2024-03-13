@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.charros_software.proceso_enfermeria.data.room.RoomRepository
 import com.charros_software.proceso_enfermeria.domain.model.DiagnosticModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,7 +12,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class DiagnosticViewModel(
-    private val roomRepository: RoomRepository
+    private val roomRepository: RoomRepository,
+    diagnosticList: List<DiagnosticModel>
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(DiagnosticUiState())
@@ -20,27 +22,34 @@ class DiagnosticViewModel(
     private var favoriteFilterIsSelected = false
 
     init {
+        updateFavoriteDiagnostics()
+        updateCollectionsList()
+        updateDiagnosticsList(diagnosticList)
+    }
+
+    private fun updateDiagnosticsList(diagnosticList: List<DiagnosticModel>) {
+        val orderList = diagnosticList.sortedBy { it.number }
+        this.diagnosticList = orderList
+
+        _uiState.update { it.copy(currentDiagnosticsList = orderList) }
+    }
+
+    private fun updateCollectionsList() {
         viewModelScope.launch {
-            _uiState.update { currentState ->
-                currentState.copy(favoriteDiagnosticsList = roomRepository.getFavoriteDiagnosticsList())
-            }
-            _uiState.update { currentState ->
-                currentState.copy(favoriteListLoaded = true)
-            }
+            _uiState.update {
+                it.copy(collectionsList = roomRepository.getNursingProcessCollectionList()) }
         }
     }
 
-    fun initDiagnosticsList(diagnosticsList: List<DiagnosticModel>) {
-
-        val orderList = diagnosticsList.sortedBy { it.number }
-        this.diagnosticList = orderList
-        _uiState.update { currentState -> currentState.copy(currentDiagnosticsList = orderList) }
+    private fun updateFavoriteDiagnostics() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(favoriteDiagnosticsList = roomRepository.getFavoriteDiagnosticsList()) }
+        }
     }
 
     fun setFavoriteDiagnostic(diagnosticNumber: Int, isFavorite: Boolean) {
-        _uiState.update { currentState -> currentState.copy(favoriteListLoaded = false) }
         viewModelScope.launch {
-
             if (roomRepository.checkFavoriteDiagnosticExistOrNull(diagnosticNumber) != null) {
                 roomRepository.updateFavoriteDiagnostic(diagnosticNumber, isFavorite)
             } else {
@@ -50,8 +59,6 @@ class DiagnosticViewModel(
         }
         if (favoriteFilterIsSelected) {
             filterFavoriteDiagnosticList(true, diagnosticNumber)
-        } else {
-            _uiState.update { it.copy(favoriteListLoaded = true) }
         }
     }
 
@@ -68,11 +75,40 @@ class DiagnosticViewModel(
             val finalList:List<DiagnosticModel> = if (favoriteDeselected != null) {
                 updatedFavoriteList.filter { it.number != favoriteDeselected }
             } else { updatedFavoriteList }
-            _uiState.update { it.copy(currentDiagnosticsList = finalList, favoriteListLoaded = true) }
+            _uiState.update { it.copy(currentDiagnosticsList = finalList) }
         } else {
             favoriteFilterIsSelected = false
-            _uiState.update { it.copy(currentDiagnosticsList = diagnosticList, favoriteListLoaded = true) }
+            _uiState.update { it.copy(currentDiagnosticsList = diagnosticList) }
         }
+    }
+
+    fun addDiagnosticToCollection(idCollection: Int, diagnosticId: Int) {
+        viewModelScope.launch {
+            if (roomRepository.checkDiagnosticAlreadyInCollection(idCollection, diagnosticId)) {
+                viewModelScope.launch {
+                    _uiState.update { it.copy(isDiagnosticDuplicateError = true, idCollectionDiagnosticDuplicateError = idCollection) }
+                    delay(3000)
+                    _uiState.update { it.copy(isDiagnosticDuplicateError = false, idCollectionDiagnosticDuplicateError = -1) }
+                }
+            } else {
+                roomRepository.addDiagnosticToCollection(idCollection, diagnosticId)
+            }
+        }
+    }
+
+    fun addNewCollection(newCollection: String) {
+        viewModelScope.launch {
+            if (roomRepository.checkCollectionExist(newCollection) == null) {
+                roomRepository.addNewCollection(newCollection)
+                updateCollectionsList()
+            } else {
+                _uiState.update { it.copy(isCollectionDuplicateError = true) }
+            }
+        }
+    }
+
+    fun setOffCollectionDuplicateError() {
+        _uiState.update { it.copy(isCollectionDuplicateError = false) }
     }
 
 }

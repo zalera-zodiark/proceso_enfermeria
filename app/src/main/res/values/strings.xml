@@ -10,6 +10,10 @@
     <string name="place_holder_search">Buscar...</string>
     <string name="label_domain">Dominio</string>
     <string name="label_class">Clase</string>
+    <string name="label_new_collection">Nueva Colección</string>
+    <string name="button_new_collection">Añadir Colección</string>
+    <string name="label_collection_duplicate_error">Nombre ya está en uso</string>
+    <string name="label_diagnostic_duplicate_error">El diagnóstico ya está en la lista</string>
 
     <!-- content description -->
     <string name="cd_search_icon">Ícono de búsqueda</string>
