@@ -1,14 +1,61 @@
 package com.charros_software.proceso_enfermeria.data
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import com.charros_software.proceso_enfermeria.R
-import com.charros_software.proceso_enfermeria.data.NICKlass.*
-import com.charros_software.proceso_enfermeria.data.NICField.*
+import com.charros_software.proceso_enfermeria.data.NICField.Field1
+import com.charros_software.proceso_enfermeria.data.NICField.Field2
+import com.charros_software.proceso_enfermeria.data.NICField.Field3
+import com.charros_software.proceso_enfermeria.data.NICField.Field4
+import com.charros_software.proceso_enfermeria.data.NICField.Field5
+import com.charros_software.proceso_enfermeria.data.NICField.Field6
+import com.charros_software.proceso_enfermeria.data.NICField.Field7
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassA
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassB
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassC
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassD
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassE
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassF
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassG
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassH
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassI
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassJ
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassK
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassL
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassM
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassN
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassO
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassP
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassQ
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassR
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassS
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassT
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassU
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassV
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassW
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassX
+import com.charros_software.proceso_enfermeria.data.NICKlass.ClassY
+import com.charros_software.proceso_enfermeria.data.NICKlass.Class_a
+import com.charros_software.proceso_enfermeria.data.NICKlass.Class_b
+import com.charros_software.proceso_enfermeria.data.NICKlass.Class_c
+import com.charros_software.proceso_enfermeria.domain.model.InterventionModel
 
 data class Intervention(
     val name: Int,
     val klass: NICKlass,
     val field: NICField
 )
+
+@Composable
+fun Intervention.toDomain(): InterventionModel {
+    val (number, intervention) = stringResource(id = name).split("|")
+    return InterventionModel(
+        number.toInt(),
+        intervention,
+        stringResource(id = klass.klassName),
+        stringResource(id = field.fieldName)
+    )
+}
 
 val nicList = listOf(
     Intervention(R.string._0180, ClassA, Field1),

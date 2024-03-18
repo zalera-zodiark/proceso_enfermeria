@@ -1,14 +1,63 @@
 package com.charros_software.proceso_enfermeria.data
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import com.charros_software.proceso_enfermeria.R
-import com.charros_software.proceso_enfermeria.data.NOCKlass.*
-import com.charros_software.proceso_enfermeria.data.NOCDomain.*
+import com.charros_software.proceso_enfermeria.data.NOCDomain.Domain1
+import com.charros_software.proceso_enfermeria.data.NOCDomain.Domain2
+import com.charros_software.proceso_enfermeria.data.NOCDomain.Domain3
+import com.charros_software.proceso_enfermeria.data.NOCDomain.Domain4
+import com.charros_software.proceso_enfermeria.data.NOCDomain.Domain5
+import com.charros_software.proceso_enfermeria.data.NOCDomain.Domain6
+import com.charros_software.proceso_enfermeria.data.NOCDomain.Domain7
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassA
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassAA
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassB
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassBB
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassC
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassCC
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassD
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassDD
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassE
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassEE
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassF
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassFF
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassG
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassH
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassI
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassJ
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassK
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassL
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassM
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassP
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassQ
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassR
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassS
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassT
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassU
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassV
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassW
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassX
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassY
+import com.charros_software.proceso_enfermeria.data.NOCKlass.KlassZ
+import com.charros_software.proceso_enfermeria.domain.model.ResultModel
 
 data class Result(
     val result: Int,
     val nocClass: NOCKlass,
     val nocDomain: NOCDomain
 )
+
+@Composable
+fun Result.toDomain(): ResultModel {
+    val (number, result) = stringResource(id = result).split("|")
+    return ResultModel(
+        stringResource(id = nocDomain.description),
+        stringResource(id = nocClass.description),
+        number = number.toInt(),
+        result = result
+    )
+}
 
 val nocList = listOf(
     Result(R.string.noc_0002, KlassA, Domain1),

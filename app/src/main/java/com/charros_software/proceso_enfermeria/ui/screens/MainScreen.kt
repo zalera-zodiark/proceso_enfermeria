@@ -116,7 +116,7 @@ fun MainScreenContent(navController: NavController) {
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Button(onClick = { /*TODO*/ }) {
+                        Button(onClick = { navController.navigate(AppScreens.InterventionsScreen.route) }) {
                             Text(text = stringResource(id = R.string.button_explore))
                         }
                     }
@@ -155,7 +155,7 @@ fun MainScreenContent(navController: NavController) {
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Button(onClick = { /*TODO*/ }) {
+                        Button(onClick = { navController.navigate(AppScreens.ResultsScreen.route) }) {
                             Text(text = stringResource(id = R.string.button_explore))
                         }
                     }
@@ -194,7 +194,7 @@ fun MainScreenContent(navController: NavController) {
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Button(onClick = { /*TODO*/ }) {
+                        Button(onClick = { navController.navigate(AppScreens.CollectionsScreen.route) }) {
                             Text(text = stringResource(id = R.string.button_explore))
                         }
                     }

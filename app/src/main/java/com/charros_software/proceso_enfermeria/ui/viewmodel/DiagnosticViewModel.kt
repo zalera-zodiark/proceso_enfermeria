@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 class DiagnosticViewModel(
     private val roomRepository: RoomRepository,
     diagnosticList: List<DiagnosticModel>
-): ViewModel() {
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DiagnosticUiState())
     val uiState: StateFlow<DiagnosticUiState> = _uiState.asStateFlow()
@@ -37,14 +37,16 @@ class DiagnosticViewModel(
     private fun updateCollectionsList() {
         viewModelScope.launch {
             _uiState.update {
-                it.copy(collectionsList = roomRepository.getNursingProcessCollectionList()) }
+                it.copy(collectionsList = roomRepository.getNursingProcessCollectionList())
+            }
         }
     }
 
     private fun updateFavoriteDiagnostics() {
         viewModelScope.launch {
             _uiState.update {
-                it.copy(favoriteDiagnosticsList = roomRepository.getFavoriteDiagnosticsList()) }
+                it.copy(favoriteDiagnosticsList = roomRepository.getFavoriteDiagnosticsList())
+            }
         }
     }
 
@@ -65,16 +67,20 @@ class DiagnosticViewModel(
     fun filterFavoriteDiagnosticList(isSelected: Boolean, favoriteDeselected: Int?) {
         if (isSelected) {
             favoriteFilterIsSelected = true
-            val updatedFavoriteList: MutableList<DiagnosticModel> = emptyList<DiagnosticModel>().toMutableList()
+            _uiState.update { it.copy(currentDiagnosticsList = diagnosticList) }
+            val updatedFavoriteList: MutableList<DiagnosticModel> =
+                emptyList<DiagnosticModel>().toMutableList()
             uiState.value.favoriteDiagnosticsList.forEach { favoriteDiagnostic ->
                 uiState.value.currentDiagnosticsList.forEach { currentDiagnostic ->
                     if (currentDiagnostic.number == favoriteDiagnostic.diagnosticId && favoriteDiagnostic.isFavorite)
                         updatedFavoriteList.add(currentDiagnostic)
                 }
             }
-            val finalList:List<DiagnosticModel> = if (favoriteDeselected != null) {
+            val finalList: List<DiagnosticModel> = if (favoriteDeselected != null) {
                 updatedFavoriteList.filter { it.number != favoriteDeselected }
-            } else { updatedFavoriteList }
+            } else {
+                updatedFavoriteList
+            }
             _uiState.update { it.copy(currentDiagnosticsList = finalList) }
         } else {
             favoriteFilterIsSelected = false
@@ -85,13 +91,24 @@ class DiagnosticViewModel(
     fun addDiagnosticToCollection(idCollection: Int, diagnosticId: Int) {
         viewModelScope.launch {
             if (roomRepository.checkDiagnosticAlreadyInCollection(idCollection, diagnosticId)) {
-                viewModelScope.launch {
-                    _uiState.update { it.copy(isDiagnosticDuplicateError = true, idCollectionDiagnosticDuplicateError = idCollection) }
-                    delay(3000)
-                    _uiState.update { it.copy(isDiagnosticDuplicateError = false, idCollectionDiagnosticDuplicateError = -1) }
+                _uiState.update {
+                    it.copy(
+                        isDiagnosticDuplicateError = true,
+                        idCollectionDiagnosticDuplicateError = idCollection
+                    )
+                }
+                delay(3000)
+                _uiState.update {
+                    it.copy(
+                        isDiagnosticDuplicateError = false,
+                        idCollectionDiagnosticDuplicateError = -1
+                    )
                 }
             } else {
                 roomRepository.addDiagnosticToCollection(idCollection, diagnosticId)
+                _uiState.update { it.copy(showDiagnosticAddedToCollectionMessage = true) }
+                delay(10)
+                _uiState.update { it.copy(showDiagnosticAddedToCollectionMessage = false) }
             }
         }
     }
@@ -109,6 +126,14 @@ class DiagnosticViewModel(
 
     fun setOffCollectionDuplicateError() {
         _uiState.update { it.copy(isCollectionDuplicateError = false) }
+    }
+
+    fun searchValueChange(value: String) {
+        val newList = diagnosticList.filter {
+            it.diagnostic.uppercase().contains(value.trim().uppercase()) ||
+                    it.number.toString().contains(value, true)
+        }
+        _uiState.update { it.copy(currentDiagnosticsList = newList) }
     }
 
 }

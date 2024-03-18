@@ -2,7 +2,7 @@ package com.charros_software.proceso_enfermeria.data
 
 import com.charros_software.proceso_enfermeria.R
 
-enum class NOCDomain(name: Int) {
+enum class NOCDomain(val description: Int) {
     Domain1(R.string.noc_domain1),
     Domain2(R.string.noc_domain2),
     Domain3(R.string.noc_domain3),

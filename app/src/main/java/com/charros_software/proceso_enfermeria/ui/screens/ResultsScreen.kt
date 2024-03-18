@@ -48,18 +48,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.charros_software.proceso_enfermeria.R
-import com.charros_software.proceso_enfermeria.data.nandaList
+import com.charros_software.proceso_enfermeria.data.nocList
 import com.charros_software.proceso_enfermeria.data.room.AppDatabase
 import com.charros_software.proceso_enfermeria.data.room.RoomRepository
 import com.charros_software.proceso_enfermeria.data.toDomain
-import com.charros_software.proceso_enfermeria.ui.viewmodel.DiagnosticUiState
-import com.charros_software.proceso_enfermeria.ui.viewmodel.DiagnosticViewModel
+import com.charros_software.proceso_enfermeria.ui.viewmodel.ResultUiState
+import com.charros_software.proceso_enfermeria.ui.viewmodel.ResultViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun DiagnosticsScreen(
-    navController: NavController,
-) {
+fun ResultsScreen(navController: NavController) {
     val context = LocalContext.current
     val database = AppDatabase.getDatabase(context)
     val repository = RoomRepository(
@@ -70,28 +68,28 @@ fun DiagnosticsScreen(
         database.favoriteDiagnosticDao(),
         database.favoriteInterventionDao(),
         database.favoriteResultDao())
-    val diagnosticViewModel = DiagnosticViewModel(repository, nandaList.map { it.toDomain() })
-    val diagnosticUiState by diagnosticViewModel.uiState.collectAsState()
+    val resultViewModel = ResultViewModel(repository, nocList.map { it.toDomain() })
+    val resultUiState by resultViewModel.uiState.collectAsState()
 
     Scaffold(
-        topBar = { TopAppBarDiagnosticScreen(diagnosticViewModel) }
+        topBar = { TopAppBarResultScreen(resultViewModel) }
     ) {
-        ContentDiagnosticScreen(navController, diagnosticViewModel, diagnosticUiState)
+        ContentResultScreen(navController, resultViewModel, resultUiState)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ContentDiagnosticScreen(
+fun ContentResultScreen(
     navController: NavController,
-    diagnosticViewModel: DiagnosticViewModel,
-    diagnosticUiState: DiagnosticUiState) {
-
+    resultViewModel: ResultViewModel,
+    resultUiState: ResultUiState
+) {
     var query by remember { mutableStateOf("") }
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
     var newCollection by rememberSaveable { mutableStateOf("") }
-    var diagnosticSelectedToAddCollection by remember { mutableIntStateOf(0) }
+    var resultSelectedToAddCollection by remember { mutableIntStateOf(0) }
 
     Column(
         modifier = Modifier
@@ -109,10 +107,10 @@ fun ContentDiagnosticScreen(
                 .fillMaxWidth(.9f),
             value = query,
             onValueChange = {
-                diagnosticViewModel.searchValueChange(it)
+                resultViewModel.searchValueChange(it)
                 query = it },
             trailingIcon = { Icon(Icons.Filled.Search, contentDescription = stringResource(id = R.string.cd_search_icon)) },
-            placeholder = {Text(stringResource(id = R.string.place_holder_search))}
+            placeholder = { Text(stringResource(id = R.string.place_holder_search)) }
         )
         HorizontalDivider(
             modifier = Modifier
@@ -124,68 +122,68 @@ fun ContentDiagnosticScreen(
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-                items(diagnosticUiState.currentDiagnosticsList.size) {
-                    val diagnosticFavorite = diagnosticUiState.favoriteDiagnosticsList.find { favoriteDiagnostic ->
-                        favoriteDiagnostic.diagnosticId == diagnosticUiState.currentDiagnosticsList[it].number
-                    }
-                    val isFavorite = diagnosticFavorite?.isFavorite ?: false
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        ListItem(
-                            headlineContent = {
-                                Text(text = diagnosticUiState.currentDiagnosticsList[it].diagnostic)
-                            },
-                            overlineContent = {
-                                Text(
-                                    text = String.format(
-                                        "# %04d",
-                                        diagnosticUiState.currentDiagnosticsList[it].number
-                                    )
+            items(resultUiState.currentResultsList.size) {
+                val diagnosticFavorite = resultUiState.favoriteResultsList.find { favoriteDiagnostic ->
+                    favoriteDiagnostic.resultId == resultUiState.currentResultsList[it].number
+                }
+                val isFavorite = diagnosticFavorite?.isFavorite ?: false
+                Row(
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    ListItem(
+                        headlineContent = {
+                            Text(text = resultUiState.currentResultsList[it].result)
+                        },
+                        overlineContent = {
+                            Text(
+                                text = String.format(
+                                    "# %04d",
+                                    resultUiState.currentResultsList[it].number
                                 )
-                            },
-                            supportingContent = {
-                                Column {
-                                    HorizontalDivider(
-                                        modifier = Modifier
-                                            .fillMaxWidth(.9f)
-                                            .padding(vertical = 2.dp),
-                                        color = MaterialTheme.colorScheme.primary
+                            )
+                        },
+                        supportingContent = {
+                            Column {
+                                HorizontalDivider(
+                                    modifier = Modifier
+                                        .fillMaxWidth(.9f)
+                                        .padding(vertical = 2.dp),
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                                Text(text = "${stringResource(id = R.string.label_class)}: ${resultUiState.currentResultsList[it].klass}")
+                                Text(text = "${stringResource(id = R.string.label_domain)}: ${resultUiState.currentResultsList[it].domain}")
+                            }
+                        },
+                        trailingContent = {
+                            Column {
+                                IconButton(onClick = {
+                                    resultViewModel.setFavoriteResult(resultUiState.currentResultsList[it].number, !isFavorite)
+                                }) {
+                                    Icon(
+                                        imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                                        contentDescription = stringResource(id = R.string.cd_favourite_icon)
                                     )
-                                    Text(text = "${stringResource(id = R.string.label_class)}: ${diagnosticUiState.currentDiagnosticsList[it].klass}")
-                                    Text(text = "${stringResource(id = R.string.label_domain)}: ${diagnosticUiState.currentDiagnosticsList[it].domain}")
                                 }
-                            },
-                            trailingContent = {
-                                Column {
-                                    IconButton(onClick = {
-                                        diagnosticViewModel.setFavoriteDiagnostic(diagnosticUiState.currentDiagnosticsList[it].number, !isFavorite)
-                                    }) {
-                                        Icon(
-                                            imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                                            contentDescription = stringResource(id = R.string.cd_favourite_icon)
-                                        )
-                                    }
-                                    IconButton(onClick = {
-                                        diagnosticSelectedToAddCollection = diagnosticUiState.currentDiagnosticsList[it].number
-                                        showBottomSheet = true
-                                    }) {
-                                        Icon(
-                                            imageVector = Icons.Outlined.AddToPhotos,
-                                            contentDescription = stringResource(id = R.string.cd_add_collection_icon)
-                                        )
-                                    }
+                                IconButton(onClick = {
+                                    resultSelectedToAddCollection = resultUiState.currentResultsList[it].number
+                                    showBottomSheet = true
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.AddToPhotos,
+                                        contentDescription = stringResource(id = R.string.cd_add_collection_icon)
+                                    )
                                 }
                             }
-                        )
-                    }
-                    HorizontalDivider(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                        thickness = 4.dp
+                        }
                     )
+                }
+                HorizontalDivider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    thickness = 4.dp
+                )
             }
         }
         if (showBottomSheet) {
@@ -209,15 +207,15 @@ fun ContentDiagnosticScreen(
                             ),
                         value = newCollection,
                         onValueChange = {
-                            if (diagnosticUiState.isCollectionDuplicateError) {
-                                diagnosticViewModel.setOffCollectionDuplicateError()
+                            if (resultUiState.isCollectionDuplicateError) {
+                                resultViewModel.setOffCollectionDuplicateError()
                             }
                             newCollection = it},
                         label = { Text(stringResource(R.string.label_new_collection)) },
                         singleLine = true,
-                        isError = diagnosticUiState.isCollectionDuplicateError,
+                        isError = resultUiState.isCollectionDuplicateError,
                         supportingText = {
-                            if (diagnosticUiState.isCollectionDuplicateError) {
+                            if (resultUiState.isCollectionDuplicateError) {
                                 Text(stringResource(id = R.string.label_collection_duplicate_error))
                             } else {
                                 Text("")
@@ -227,7 +225,7 @@ fun ContentDiagnosticScreen(
                     FilledIconButton(
                         modifier = Modifier.padding(start = 5.dp),
                         onClick = {
-                            diagnosticViewModel.addNewCollection(newCollection)
+                            resultViewModel.addNewCollection(newCollection)
                             newCollection = ""
                         }
                     ) { Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.button_new_collection)) }
@@ -248,22 +246,22 @@ fun ContentDiagnosticScreen(
                             color = MaterialTheme.colorScheme.primary
                         )
                     }
-                    items(diagnosticUiState.collectionsList.size) {
+                    items(resultUiState.collectionsList.size) {
                         ListItem(
-                            headlineContent = { Text(diagnosticUiState.collectionsList[it].name) },
-                            overlineContent = { Text(diagnosticUiState.collectionsList[it].date) },
+                            headlineContent = { Text(resultUiState.collectionsList[it].name) },
+                            overlineContent = { Text(resultUiState.collectionsList[it].date) },
                             trailingContent = { OutlinedIconButton(onClick = {
-                                diagnosticViewModel
-                                    .addDiagnosticToCollection(
-                                        diagnosticUiState.collectionsList[it].idNursingProcessCollection,
-                                        diagnosticSelectedToAddCollection) }) {
+                                resultViewModel
+                                    .addResultToCollection(
+                                        resultUiState.collectionsList[it].idNursingProcessCollection,
+                                        resultSelectedToAddCollection) }) {
                                 Icon(Icons.Filled.LibraryAdd, stringResource(id = R.string.cd_add_collection_icon))
                             } },
                             supportingContent = {
-                                if (diagnosticUiState.isDiagnosticDuplicateError &&
-                                    diagnosticUiState.idCollectionDiagnosticDuplicateError == diagnosticUiState.collectionsList[it].idNursingProcessCollection) {
+                                if (resultUiState.isResultDuplicateError &&
+                                    resultUiState.idCollectionResultDuplicateError == resultUiState.collectionsList[it].idNursingProcessCollection) {
                                     Text(
-                                        stringResource(id = R.string.label_diagnostic_duplicate_error),
+                                        stringResource(id = R.string.label_result_duplicate_error),
                                         color = Color.Red)
                                 } else {
                                     Text("",
@@ -279,23 +277,23 @@ fun ContentDiagnosticScreen(
             }
         }
     }
-    if (diagnosticUiState.showDiagnosticAddedToCollectionMessage) {
+    if (resultUiState.showResultAddedToCollectionMessage) {
         showBottomSheet = false
         Toast.makeText(LocalContext.current,
-            stringResource(id = R.string.label_add_diagnostic_to_collection), Toast.LENGTH_SHORT).show()
+            stringResource(id = R.string.label_add_result_to_collection), Toast.LENGTH_SHORT).show()
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBarDiagnosticScreen(diagnosticViewModel: DiagnosticViewModel) {
+fun TopAppBarResultScreen(resultViewModel: ResultViewModel) {
     var favoriteListSelected by rememberSaveable { mutableStateOf(false) }
 
     TopAppBar(
-        title = { Text(stringResource(id = R.string.title_diagnostics)) },
+        title = { Text(stringResource(id = R.string.title_results)) },
         actions = {
             IconButton(onClick = {
-                diagnosticViewModel.filterFavoriteDiagnosticList(!favoriteListSelected, null)
+                resultViewModel.filterFavoriteResultList(!favoriteListSelected, null)
                 favoriteListSelected = !favoriteListSelected
             }) {
                 Icon(

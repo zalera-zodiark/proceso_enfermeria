@@ -3,7 +3,11 @@
     <string name="app_name">Nursing Process</string>
     <string name="title_diagnostics">Diagnostics</string>
     <string name="label_collection_duplicate_error">Name already in use</string>
+    <string name="label_intervention_duplicate_error">The intervention is already on the list</string>
+    <string name="label_delete_collection_message">The collection has been deleted</string>
     <string name="cd_search_icon">search icon</string>
+    <string name="cd_play_icon">play icon</string>
+    <string name="cd_expand_icon">expand icon</string>
     <string name="nanda_domain_1">Health Promotion</string>
     <string name="nanda_domain_2">Nutrition</string>
     <string name="nanda_domain_3">Elimination and Exchange</string>
@@ -1118,13 +1122,20 @@
     <string name="title_interventions">Interventions</string>
     <string name="button_explore">Explore</string>
     <string name="title_results">Results</string>
+    <string name="title_collections">Collections</string>
     <string name="title_save_lists">Saved Lists</string>
     <string name="place_holder_search">Search...</string>
     <string name="label_domain">Domain</string>
+    <string name="label_field">Field</string>
     <string name="label_class">Class</string>
     <string name="cd_favourite_icon">favorite icon</string>
     <string name="cd_add_collection_icon">add to collection icon</string>
     <string name="label_new_collection">New collection</string>
     <string name="button_new_collection">Add Collection</string>
     <string name="label_diagnostic_duplicate_error">Diagnosis is already listed</string>
+    <string name="label_result_duplicate_error">The result is already in the list</string>
+    <string name="cd_delete_icon">delete icon</string>
+    <string name="label_add_diagnostic_to_collection">Diagnostic added successfully.</string>
+    <string name="label_add_intervention_to_collection">Successfully added intervention.</string>
+    <string name="label_add_result_to_collection">Result added successfully.</string>
 </resources>

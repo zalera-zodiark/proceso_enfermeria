@@ -13,4 +13,12 @@ interface NursingProcessDiagnosticsDao {
     @Query(
         "SELECT * FROM nursing_process_diagnostics WHERE idDiagnostic = :idDiagnostic AND collection_ref = :collectionRef"
     ) suspend fun checkDuplicate(idDiagnostic: Int, collectionRef: Int): NursingProcessDiagnostics?
+
+    @Query(
+        "SELECT * FROM nursing_process_diagnostics WHERE collection_ref = :idCollection"
+    ) suspend fun getDiagnosticsByCollectionId(idCollection: Int): List<NursingProcessDiagnostics>
+
+    @Query(
+        "DELETE FROM nursing_process_diagnostics WHERE idDiagnostic = :idDiagnostic"
+    ) suspend fun deleteDiagnosticById(idDiagnostic: Int)
 }

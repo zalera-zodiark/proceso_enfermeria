@@ -6,14 +6,25 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [FavoriteDiagnostic::class, NursingProcessDiagnostics::class, NursingProcessCollection::class],
-    version = 3
+    entities = [
+        FavoriteDiagnostic::class,
+        FavoriteIntervention::class,
+        FavoriteResult::class,
+        NursingProcessDiagnostics::class,
+        NursingProcessInterventions::class,
+        NursingProcessResults::class,
+        NursingProcessCollection::class],
+    version = 5
 )
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun favoriteDiagnosticDao(): FavoriteDiagnosticDao
+    abstract fun favoriteInterventionDao(): FavoriteInterventionDao
+    abstract fun favoriteResultDao(): FavoriteResultDao
     abstract fun nursingProcessCollectionDao(): NursingProcessCollectionDao
     abstract fun nursingProcessDiagnosticsDao(): NursingProcessDiagnosticsDao
+    abstract fun nursingProcessInterventionsDao(): NursingProcessInterventionsDao
+    abstract fun nursingProcessResultsDao(): NursingProcessResultsDao
 
     companion object {
         @Volatile

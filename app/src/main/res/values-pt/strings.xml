@@ -3,7 +3,11 @@
     <string name="app_name">Processo de Enfermagem</string>
     <string name="title_diagnostics">Diagnóstico</string>
     <string name="label_collection_duplicate_error">Nome já em uso</string>
+    <string name="label_intervention_duplicate_error">A intervenção já está na lista</string>
+    <string name="label_delete_collection_message">A coleção foi excluída</string>
     <string name="cd_search_icon">ícone de pesquisa</string>
+    <string name="cd_play_icon">ícone de execução</string>
+    <string name="cd_expand_icon">expandir ícone</string>
     <string name="nanda_domain_1">Promoção da Saúde</string>
     <string name="nanda_domain_2">Nutrição</string>
     <string name="nanda_domain_3">Eliminação e Troca</string>
@@ -1118,13 +1122,20 @@
     <string name="title_interventions">Intervenções</string>
     <string name="button_explore">Explorar</string>
     <string name="title_results">Resultados</string>
+    <string name="title_collections">Coleções</string>
     <string name="title_save_lists">Listas salvas</string>
     <string name="place_holder_search">Buscar...</string>
     <string name="label_domain">Domínio</string>
+    <string name="label_field">Campo</string>
     <string name="label_class">Classe</string>
     <string name="cd_favourite_icon">ícone favorito</string>
     <string name="cd_add_collection_icon">adicionar ao ícone da coleção</string>
     <string name="label_new_collection">Nova coleção</string>
     <string name="button_new_collection">Adicionar coleção</string>
     <string name="label_diagnostic_duplicate_error">O diagnóstico já está listado</string>
+    <string name="label_result_duplicate_error">O resultado já está na lista</string>
+    <string name="cd_delete_icon">excluir ícone</string>
+    <string name="label_add_diagnostic_to_collection">Diagnóstico adicionado com sucesso.</string>
+    <string name="label_add_intervention_to_collection">Intervenção adicionada com sucesso.</string>
+    <string name="label_add_result_to_collection">Resultado adicionado com sucesso.</string>
 </resources>

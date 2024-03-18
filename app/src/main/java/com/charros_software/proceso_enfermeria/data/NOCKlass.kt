@@ -2,7 +2,7 @@ package com.charros_software.proceso_enfermeria.data
 
 import com.charros_software.proceso_enfermeria.R
 
-enum class NOCKlass(name: Int) {
+enum class NOCKlass(val description: Int) {
     KlassA(R.string.noc_classA),
     KlassB(R.string.noc_classB),
     KlassC(R.string.noc_classC),

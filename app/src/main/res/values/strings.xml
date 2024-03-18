@@ -1,24 +1,35 @@
 <resources>
-    <string name="app_name">Diagnósticos, Intervenciones y Resultados de Enfermería</string>
+    <string name="app_name">Proceso Enfermería</string>
 
     <!-- Label's -->
     <string name="title_diagnostics">Diagnósticos</string>
     <string name="title_interventions">Intervenciones</string>
     <string name="title_results">Resultados</string>
+    <string name="title_collections">Colecciones</string>
     <string name="title_save_lists">Listas Guardadas</string>
     <string name="button_explore">Explorar</string>
     <string name="place_holder_search">Buscar...</string>
     <string name="label_domain">Dominio</string>
+    <string name="label_field">Campo</string>
     <string name="label_class">Clase</string>
     <string name="label_new_collection">Nueva Colección</string>
     <string name="button_new_collection">Añadir Colección</string>
     <string name="label_collection_duplicate_error">Nombre ya está en uso</string>
     <string name="label_diagnostic_duplicate_error">El diagnóstico ya está en la lista</string>
+    <string name="label_intervention_duplicate_error">La intervención ya está en la lista</string>
+    <string name="label_result_duplicate_error">El resultado ya está en la lista</string>
+    <string name="label_delete_collection_message">La colección ha sido eliminada.</string>
+    <string name="label_add_diagnostic_to_collection">Diagnóstico añadido con éxito.</string>
+    <string name="label_add_intervention_to_collection">Intervención añadida con éxito.</string>
+    <string name="label_add_result_to_collection">Resultado añadido con éxito.</string>
 
     <!-- content description -->
     <string name="cd_search_icon">Ícono de búsqueda</string>
     <string name="cd_favourite_icon">Ícono de favorito</string>
     <string name="cd_add_collection_icon">ícono de agregar a colección</string>
+    <string name="cd_play_icon">ícono de ejecutar</string>
+    <string name="cd_delete_icon">ícono de borrar</string>
+    <string name="cd_expand_icon">ícono de expandir</string>
 
     <!-- Nanda Domains -->
     <string name="nanda_domain_1">Promoción de la Salud</string>

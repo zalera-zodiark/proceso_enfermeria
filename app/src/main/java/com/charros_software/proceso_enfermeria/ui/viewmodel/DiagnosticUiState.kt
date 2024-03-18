@@ -10,5 +10,6 @@ data class DiagnosticUiState(
     val collectionsList: List<NursingProcessCollection> = emptyList(),
     val isCollectionDuplicateError: Boolean = false,
     val isDiagnosticDuplicateError: Boolean = false,
-    val idCollectionDiagnosticDuplicateError: Int = -1
+    val idCollectionDiagnosticDuplicateError: Int = -1,
+    val showDiagnosticAddedToCollectionMessage: Boolean = false
 )
